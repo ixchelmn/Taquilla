@@ -40,34 +40,36 @@ include("../../../top-bar.php");
                             <div class="form-group">
                                 <div class="col-12">
                                     <label>Nombre Completo:</label>
-                                    <input type="text" name="nombre" placeholder="Nombre Completo" class="form-control <?php echo (!empty($email_err)); ?>" value="<?php echo $email; ?>">
-                                    <span class="invalid-feedback"><?php echo $email_err; ?></span>
+                                    <input type="text" name="nombre" placeholder="Nombre Completo" class="form-control <?php echo (!empty($nombre_err)); ?>" value="<?php echo $nombre; ?>">
+                                    <span class="invalid-feedback"><?php echo $nombre_err; ?></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-12">
                                     <label>Apellidos</label>
-                                    <input type="text" name="apellido" placeholder="Apellidos" class="form-control <?php echo (!empty($username_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $username; ?>">
-                                    <span class="invalid-feedback"><?php echo $username_err; ?></span>
+                                    <input type="text" name="apellido" placeholder="Apellidos" class="form-control <?php echo (!empty($apellido_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $apellido; ?>">
+                                    <span class="invalid-feedback"><?php echo $apellido_err; ?></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-12">
                                     <label>Identidad</label>
-                                    <input type="text" name="Identidad" placeholder="Numero de Identidad" class="form-control <?php echo (!empty($username_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $username; ?>">
-                                    <span class="invalid-feedback"><?php echo $username_err; ?></span>
+                                    <input type="text" name="Identidad" placeholder="Numero de Identidad" class="form-control <?php echo (!empty($identidad_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $identidad; ?>">
+                                    <span class="invalid-feedback"><?php echo $identidad_err; ?></span>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="dropdown">
-                                    <button class="pink-button btn-secondary dropdown-toggle" type="button" id="comboPeliculas" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Elige tu pelicula
-                                    </button>
-                                    <ul class="dropdown-menu" aria-labelledby="comboPeliculas">
-                                        <li><a class="dropdown-item" href="#">Evangelion 3.0+1.0</a></li>
-                                        <li><a class="dropdown-item" href="#">The Lighthouse</a></li>                                        
-                                    </ul>
-                                </div>
+                                <p>Seleccione Una Pelicula del menu siguiente:</p>
+                                <p>Peliculas:
+                                    <select>
+                                        <option value="0">Seleccione:</option>
+                                        <?php
+                                        $query = $mysqli_prepare->query("SELECT * FROM peliculas");
+                                        while ($valores = mysqli_fetch_array($query)) {
+                                            echo '<option value="' . $valores[id_pelicula] . '">' . $valores[peliculas] . '</option>';
+                                        }
+                                        ?>
+                                    </select>
                             </div>
                             <div class="form-group">
                                 <div class="dropdown">
@@ -118,14 +120,28 @@ include("../../../top-bar.php");
                                     <input type="password" name="confirm_password" placeholder="confirma tu contraseña" class="form-control <?php echo (!empty($confirm_password_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $confirm_password; ?>">
                                     <span class="invalid-feedback"><?php echo $confirm_password_err; ?></span>
                                 </div> -->
-                            </div>
-                            <div class="col-12 flex-center">
-                                <button type="submit" class="btn pink-button" name="register">Compra tus Boletos</button>
-                            </div>
-                        </form>
                     </div>
+                    <div class="col-12 flex-center">
+                        <button type="submit" class="btn pink-button" name="register">Compra tus Boletos</button>
+                    </div>
+                    </form>
+                    <?php
+                    function rebajas($precio)
+                    {
+                        $descuento = ($precio * 0.15);
+                        $total = $precio - $descuento;
+                        return array($descuento, $total);
+                    }
+                    $precio = $_POST['precio'];
+                    $descuento = $_POST['descuento'];
+                    list($rebaja, $precioFinal) = rebajas($precio, $descuento);
+                    echo "Precio inicial: $precio. <br/>";
+                    echo "Este artículo está rebajado en $descuento L. <br/>";
+                    echo "Precio final del artículo: $total L.";
+                    ?>
                 </div>
             </div>
+        </div>
         </div>
 
         <footer>
