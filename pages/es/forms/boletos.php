@@ -3,7 +3,7 @@
 
 
 <?php
-include("registrar.php");
+include("boleteria.php");
 ?>
 
 <?php
@@ -20,10 +20,9 @@ include("../../../top-bar.php");
     <link rel="shortcut icon" href="/Taquilla/src/img/iconoSitio-03.png" type="image/x-icon">
     <title>Hatch Atelier</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
-    <link rel="stylesheet" href="/Taquilla/src/style/registrate.css">
+    <link rel="stylesheet" href="/Taquilla/src/style/boletos.css">
     <link rel="stylesheet" href="/Taquilla/src/style/fontawesome-free-5.15.3-web/css/all.css">
 </head>
-
 
 <body>
     <header>
@@ -54,72 +53,45 @@ include("../../../top-bar.php");
                             <div class="form-group">
                                 <div class="col-12">
                                     <label>Identidad</label>
-                                    <input type="text" name="Identidad" placeholder="Numero de Identidad" class="form-control <?php echo (!empty($identidad_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $identidad; ?>">
-                                    <span class="invalid-feedback"><?php echo $identidad_err; ?></span>
+                                    <input type="text" name="identidad" placeholder="Numero de Identidad" class="form-control" value="<?php echo $identidad; ?>">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <p>Seleccione Una Pelicula del menu siguiente:</p>
                                 <p>Peliculas:
-                                    <select>
+                                    <select name="id_pelicula" class="form-control">
                                         <option value="0">Seleccione:</option>
                                         <?php
-                                        $query = $mysqli_prepare->query("SELECT * FROM peliculas");
+                                        $valor_pelicula = 0;
+                                        $query = $link->query("SELECT * FROM peliculas");
                                         while ($valores = mysqli_fetch_array($query)) {
-                                            echo '<option value="' . $valores[id_pelicula] . '">' . $valores[peliculas] . '</option>';
+                                            echo '<option value="' . $valores[id_pelicula] . '">' . $valores[nombre_pelicula] . $valores[valor_pelicula] . '</option>';
+                                            $valor_pelicula = $valores[valor_pelicula];
+                                        }
+
+                                        ?>
+                                    </select>
+                            </div>
+                            <div class="form-group">
+                                <p>Seleccione asientos disponibles:</p>
+                                <p>Asientos:
+                                    <select name="id_silla" class="form-control">
+                                        <option value="0">Seleccione:</option>
+                                        <?php
+                                        $query = $link->query("SELECT * FROM sillas WHERE status=1");
+                                        while ($valores = mysqli_fetch_array($query)) {
+                                            echo '<option value="' . $valores[num_silla] . '">' . $valores[num_silla] . '</option>';
                                         }
                                         ?>
                                     </select>
                             </div>
                             <div class="form-group">
-                                <div class="dropdown">
-                                    <button class="pink-button btn-secondary dropdown-toggle" type="button" id="comboPeliculas" data-bs-toggle="dropdown" aria-expanded="false" size="0">
-                                        Elige tu silla
-                                    </button>
-                                    <ul class="dropdown-menu" aria-labelledby="comboPeliculas">
-                                        <li><a class="dropdown-item" href="#">1</a></li>
-                                        <li><a class="dropdown-item" href="#">2</a></li>
-                                        <li><a class="dropdown-item" href="#">3</a></li>
-                                        <li><a class="dropdown-item" href="#">4</a></li>
-                                        <li><a class="dropdown-item" href="#">5</a></li>
-                                        <li><a class="dropdown-item" href="#">6</a></li>
-                                        <li><a class="dropdown-item" href="#">7</a></li>
-                                        <li><a class="dropdown-item" href="#">8</a></li>
-                                        <li><a class="dropdown-item" href="#">9</a></li>
-                                        <li><a class="dropdown-item" href="#">10</a></li>
-                                        <li><a class="dropdown-item" href="#">11</a></li>
-                                        <li><a class="dropdown-item" href="#">12</a></li>
-                                        <li><a class="dropdown-item" href="#">13</a></li>
-                                        <li><a class="dropdown-item" href="#">14</a></li>
-                                        <li><a class="dropdown-item" href="#">15</a></li>
-                                        <li><a class="dropdown-item" href="#">16</a></li>
-                                        <li><a class="dropdown-item" href="#">17</a></li>
-                                        <li><a class="dropdown-item" href="#">18</a></li>
-                                        <li><a class="dropdown-item" href="#">19</a></li>
-                                        <li><a class="dropdown-item" href="#">20</a></li>
-                                    </ul>
+                                <div class="col-12">
+                                    <label>Costo Total</label>
+                                    <input type="text" name="precio" placeholder="Precio" class="form-control" value="100">
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <div class="col-12">
-                                    <label>Precio</label>
-                                    <input type="text" name="precio" placeholder="Precio" class="form-control <?php echo (!empty($username_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $username; ?>">
-                                    <span class="invalid-feedback"><?php echo $username_err; ?></span>
-                                </div>
-                            </div>
-                            <!-- <div class="form-group">
-                                <div class="col-12">
-                                    <label>Contraseña</label>
-                                    <input type="password" name="password" placeholder="contraseña" class="form-control <?php echo (!empty($password_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $password; ?>">
-                                    <span class="invalid-feedback"><?php echo $password_err; ?></span>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-12">
-                                    <label>Confirmar Contraseña</label>
-                                    <input type="password" name="confirm_password" placeholder="confirma tu contraseña" class="form-control <?php echo (!empty($confirm_password_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $confirm_password; ?>">
-                                    <span class="invalid-feedback"><?php echo $confirm_password_err; ?></span>
-                                </div> -->
+
                     </div>
                     <div class="col-12 flex-center">
                         <button type="submit" class="btn pink-button" name="register">Compra tus Boletos</button>
@@ -129,7 +101,7 @@ include("../../../top-bar.php");
                     function rebajas($precio)
                     {
                         $descuento = ($precio * 0.15);
-                        $total = $precio - $descuento;
+                        $total = $precio + $descuento;
                         return array($descuento, $total);
                     }
                     $precio = $_POST['precio'];
@@ -161,7 +133,7 @@ include("../../../top-bar.php");
                         <ul class="navbar-nav mb-2 mb-lg-0"></ul>
 
 
-                        <a href="/Taquilla/pages/es/Log-in/registrate.php" button class="btn btn-outline-success no-border pink-button" type="submit">BOLETOS</button></a>
+                        <a href="/Taquilla/pages/es/forms/boletos.php" button class="btn btn-outline-success no-border pink-button" type="submit">BOLETOS</button></a>
 
 
                     </div>

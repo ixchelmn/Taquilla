@@ -22,7 +22,7 @@ $total = "";
 // Processing form data when form is submitted
 if($_SERVER["REQUEST_METHOD"] == "POST"){
 
-	// Validar nombre
+ // Validar nombre
     if(empty(trim($_POST["nombre"]))){
         $nombre_err = "por favor ingrese su nombre.";
     } else{
@@ -41,8 +41,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         }
     }
 
-    	// Validar apellido
-        if(empty(trim($_POST["nombre"]))){
+     // Validar apellido
+        if(empty(trim($_POST["apellido"]))){
             $apellido_err = "por favor ingrese sus apellidos.";
         } else{
             // Prepare a select statement
@@ -60,9 +60,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             }
         }
 
-        	// Validar identidad
+         // Validar identidad
             if(empty(trim($_POST["identidad"]))){
-                $apellido_err = "por favor ingrese su identidad.";
+                $identidad_err = "por favor ingrese su identidad.";
             } else{
                 // Prepare a select statement
                 $sql = "SELECT id FROM compras WHERE identidad = ?";
@@ -72,7 +72,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                     mysqli_stmt_bind_param($stmt, "s", $param_identidad);
                     
                     // Set parameters
-                    $param_identidad = trim($_POST["apellido"]);            
+                    $param_identidad = trim($_POST["identidad"]);            
                              
                     // Close statement
                     mysqli_stmt_close($stmt);
@@ -82,13 +82,15 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     
     
     // Check input errors before inserting in database
-            
+             //calculo impuesto
+    $impuesto = $param_precio * 0.15;
+    $total = $param_precio - $impuesto;
         // Prepare an insert statement
         $sql = "INSERT INTO compras (nombre, apellido, identidad, id_pelicula, id_silla) VALUES (?, ?, ?, ?, ?)";
          
         if($stmt = mysqli_prepare($link, $sql)){
             // Bind variables to the prepared statement as parameters
-            mysqli_stmt_bind_param($stmt, "sssss", $param_nombre, $param_apellido, $param_id_pelicula, $param_id_silla);
+            mysqli_stmt_bind_param($stmt, "sssss", $param_nombre, $param_apellido, $param_identidad, $param_id_pelicula, $param_id_silla);
             
             // Set parameters
             $param_nombre = $nombre;
@@ -96,11 +98,21 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             $param_identidad = $identidad;
             $param_id_pelicula = $id_pelicula;
             $param_id_silla = $id_silla;
+
+                //Actualizar sillas
+    $sqlu = "UPDATE sillas SET status=0 WHERE id_silla=$id_silla";
+
+    if ($link->query($sqlu) === TRUE) {
+        echo "compra completada";
+      } else {
+        echo "Error en la compra: " . $link->error;
+      }
+        
             
             // Attempt to execute the prepared statement
             if(mysqli_stmt_execute($stmt)){
                 // Redirect to login page
-                header('location: index.php');
+                header('location: boletos.php');
             } else{
                 echo "Oops! Something went wrong. Please try again later.";
             }
@@ -113,5 +125,3 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     // Close connection
     mysqli_close($link);
 }
-?>
-

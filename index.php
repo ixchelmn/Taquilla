@@ -69,11 +69,11 @@
                         <h4 class="text-justify px-4 navbar-brand">¡COMPRA BOLETOS PARA TUS PELICULAS FAVORITAS!</h4>
 
                         <div class="collapse navbar-collapse normal-link" id="navbarSupportedContent">
-                            <!-- contenedor de log in / Registrate -->
+                            <!-- contenedor boletos-->
                             <ul class="navbar-nav mb-2 mb-lg-0"></ul>
 
 
-                            <a href="/Taquilla/pages/es/Log-in/registrate.php" button class="btn btn-outline-success no-border pink-button" type="submit">BOLETOS</button></a>
+                            <a href="/Taquilla/pages/es/forms/boletos.php" button class="btn btn-outline-success no-border pink-button" type="submit">BOLETOS</button></a>
 
 
                         </div>
